@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>METALCORT</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f172a,#1e3a8a);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:40px;
+    color:white;
+}
+
+.container{
+    width:100%;
+    max-width:1200px;
+}
+
+/* TARJETAS */
+.card{
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(12px);
+    border-radius:20px;
+    padding:40px;
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* INICIO */
+.inicio-card{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:250px;
+}
+
+/* TITULO */
+.inicio-card h1{
+    font-size:55px;
+    color:#60a5fa;
+    margin-bottom:30px;
+    text-align:center;
+    letter-spacing:2px;
+}
+
+/* BOTONES */
+.botones-inicio{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+button{
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+    color:white;
+    border:none;
+    padding:14px 30px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+    transition:0.3s;
+    min-width:180px;
+}
+
+button:hover{
+    transform:translateY(-2px);
+    opacity:0.9;
+}
+
+/* LOGIN */
+.login-box{
+    margin-top:25px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+input{
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    outline:none;
+    background:rgba(255,255,255,0.08);
+    color:white;
+    min-width:250px;
+}
+
+input::placeholder{
+    color:#cbd5e1;
+}
+
+/* FORMULARIOS */
+.form-section{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-top:20px;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    color:#60a5fa;
+}
+
+h2{
+    margin-top:30px;
+    margin-bottom:15px;
+    color:#93c5fd;
+}
+
+/* TABLAS */
+table{
+    width:100%;
+    margin-top:20px;
+    border-collapse:collapse;
+    overflow:hidden;
+    border-radius:15px;
+}
+
+th{
+    background:#2563eb;
+    padding:14px;
+}
+
+td{
+    padding:14px;
+    text-align:center;
+    background:rgba(255,255,255,0.04);
+}
+
+tr:nth-child(even) td{
+    background:rgba(255,255,255,0.08);
+}
+
+.hidden{
+    display:none;
+}
+
+@media(max-width:768px){
+
+    .inicio-card h1{
+        font-size:40px;
+    }
+
+    button{
+        width:100%;
+    }
+
+    .login-box{
+        flex-direction:column;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- INICIO -->
+<div id="inicio">
+
+<div class="card inicio-card">
+
+<h1>METALCORT</h1>
+
+<div class="botones-inicio">
+    <button onclick="entrarUsuario()">Usuario</button>
+    <button onclick="mostrarLogin()">Administrador</button>
+</div>
+
+<div id="loginAdmin" class="hidden login-box">
+    <input type="password" id="passAdmin" placeholder="Contraseña">
+    <button onclick="entrarAdmin()">Entrar</button>
+</div>
+
+</div>
+</div>
+
+<!-- USUARIO -->
+<div id="usuarioPanel" class="hidden">
+
+<div class="card">
+
+<h1>Facturación</h1>
+
+<div class="form-section">
+<input id="cliente" placeholder="Cliente">
+<input id="descripcion" placeholder="Producto (igual al inventario)">
+<input id="cantidad" type="number" placeholder="Cantidad">
+<button onclick="agregarFactura()">Facturar</button>
+</div>
+
+<br>
+
+<button onclick="volver()">Salir</button>
+
+</div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPanel" class="hidden">
+
+<div class="card">
+
+<h1>Administrador</h1>
+
+<div class="form-section">
+<input id="clienteA" placeholder="Cliente">
+<input id="descripcionA" placeholder="Producto">
+<input id="cantidadA" type="number" placeholder="Cantidad">
+<button onclick="agregarFactura(true)">Facturar</button>
+</div>
+
+<h2>Inventario</h2>
+
+<div class="form-section">
+<input id="nuevoNombre" placeholder="Producto">
+<input id="nuevoStock" type="number" placeholder="Cantidad">
+<input id="nuevoPrecio" type="number" placeholder="Precio">
+<button onclick="agregarInventario()">Agregar</button>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Producto</th>
+<th>Stock</th>
+<th>Precio</th>
+<th>Eliminar</th>
+</tr>
+</thead>
+
+<tbody id="tablaInventario"></tbody>
+</table>
+
+<h2>Facturas</h2>
+
+<div class="form-section">
+<button onclick="descargarFacturas()">Descargar Facturas</button>
+<button onclick="descargarInventario()">Descargar Inventario</button>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cliente</th>
+<th>Subtotal</th>
+<th>IVA</th>
+<th>Total</th>
+<th>Eliminar</th>
+</tr>
+</thead>
+
+<tbody id="tablaFacturas"></tbody>
+</table>
+
+<br>
+
+<button onclick="volver()">Salir</button>
+
+</div>
+</div>
+
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCEF...",
+  authDomain: "facturacion-89a12.firebaseapp.com",
+  projectId: "facturacion-89a12",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.fb = { collection, addDoc, getDocs, deleteDoc, doc, updateDoc };
+</script>
+
+<script>
+
+const PASSWORD = "cortadorademetales";
+
+function entrarUsuario(){
+    document.getElementById("inicio").classList.add("hidden");
+    document.getElementById("usuarioPanel").classList.remove("hidden");
+}
+
+function mostrarLogin(){
+    document.getElementById("loginAdmin").classList.remove("hidden");
+}
+
+function entrarAdmin(){
+    if(document.getElementById("passAdmin").value === PASSWORD){
+        document.getElementById("inicio").classList.add("hidden");
+        document.getElementById("adminPanel").classList.remove("hidden");
+        cargarInventario();
+        cargarFacturas();
+    } else alert("Contraseña incorrecta");
+}
+
+function volver(){
+    location.reload();
+}
+
+// ID
+function generarID(){
+    const n=new Date();
+    return `MC-${n.getFullYear()}${(n.getMonth()+1).toString().padStart(2,"0")}${n.getDate().toString().padStart(2,"0")}-${n.getHours().toString().padStart(2,"0")}${n.getMinutes().toString().padStart(2,"0")}${n.getSeconds().toString().padStart(2,"0")}`;
+}
+
+// FACTURA
+async function agregarFactura(admin=false){
+
+    try{
+
+        const clienteInput = document.getElementById(admin ? "clienteA" : "cliente");
+        const descripcionInput = document.getElementById(admin ? "descripcionA" : "descripcion");
+        const cantidadInput = document.getElementById(admin ? "cantidadA" : "cantidad");
+
+        const cliente = clienteInput.value.trim();
+        const descripcion = descripcionInput.value.trim();
+        const cantidad = Number(cantidadInput.value);
+
+        if(!cliente || !descripcion || !cantidad || cantidad<=0){
+            alert("Datos inválidos");
+            return;
+        }
+
+        const snapshot = await fb.getDocs(fb.collection(db,"inventario"));
+
+        let producto = null;
+
+        snapshot.forEach(docSnap=>{
+            const data = docSnap.data();
+
+            if(data.nombre.trim().toLowerCase() === descripcion.toLowerCase()){
+                producto = { id: docSnap.id, ...data };
+            }
+        });
+
+        if(!producto){
+            alert("Producto no existe");
+            return;
+        }
+
+        let restante = cantidad;
+        let nuevosLotes = [];
+
+        for(let lote of producto.lotes || []){
+
+            if(restante <= 0){
+                nuevosLotes.push(lote);
+                continue;
+            }
+
+            if(lote.cantidad <= restante){
+                restante -= lote.cantidad;
+            } else {
+                nuevosLotes.push({
+                    cantidad: lote.cantidad - restante,
+                    fecha: lote.fecha
+                });
+
+                restante = 0;
+            }
+        }
+
+        if(restante > 0){
+            alert("Stock insuficiente");
+            return;
+        }
+
+        await fb.updateDoc(fb.doc(db,"inventario",producto.id),{
+            lotes: nuevosLotes
+        });
+
+        const subtotal = cantidad * producto.precio;
+        const iva = subtotal * 0.19;
+        const total = subtotal + iva;
+
+        await fb.addDoc(fb.collection(db,"facturas"),{
+            idFactura: generarID(),
+            cliente,
+            descripcion,
+            cantidad,
+            subtotal,
+            iva,
+            total,
+            fecha: Date.now()
+        });
+
+        clienteInput.value = "";
+        descripcionInput.value = "";
+        cantidadInput.value = "";
+
+        alert("Factura creada correctamente");
+
+        if(admin){
+            cargarFacturas();
+            cargarInventario();
+        }
+
+    }catch(e){
+        console.error(e);
+        alert("Error al guardar factura");
+    }
+}
+
+// INVENTARIO
+async function agregarInventario(){
+
+    await fb.addDoc(fb.collection(db,"inventario"),{
+        nombre: document.getElementById("nuevoNombre").value,
+        precio: parseFloat(document.getElementById("nuevoPrecio").value),
+
+        lotes:[
+            {
+                cantidad:parseInt(document.getElementById("nuevoStock").value),
+                fecha:Date.now()
+            }
+        ]
+    });
+
+    cargarInventario();
+}
+
+async function cargarInventario(){
+
+    const datos=await fb.getDocs(fb.collection(db,"inventario"));
+
+    document.getElementById("tablaInventario").innerHTML="";
+
+    datos.forEach(d=>{
+
+        const data=d.data();
+
+        const stock=(data.lotes||[]).reduce((a,l)=>a+l.cantidad,0);
+
+        document.getElementById("tablaInventario").innerHTML+=`
+        <tr>
+        <td>${data.nombre}</td>
+        <td>${stock}</td>
+        <td>$${data.precio}</td>
+        <td><button onclick="eliminarInv('${d.id}')">X</button></td>
+        </tr>`;
+    });
+}
+
+async function eliminarInv(id){
+    await fb.deleteDoc(fb.doc(db,"inventario",id));
+    cargarInventario();
+}
+
+// FACTURAS
+async function cargarFacturas(){
+
+    const datos=await fb.getDocs(fb.collection(db,"facturas"));
+
+    document.getElementById("tablaFacturas").innerHTML="";
+
+    datos.forEach(d=>{
+
+        const f=d.data();
+
+        document.getElementById("tablaFacturas").innerHTML+=`
+        <tr>
+        <td>${f.idFactura}</td>
+        <td>${f.cliente}</td>
+        <td>$${f.subtotal}</td>
+        <td>$${f.iva}</td>
+        <td>$${f.total}</td>
+        <td><button onclick="eliminarFactura('${d.id}')">X</button></td>
+        </tr>`;
+    });
+}
+
+async function eliminarFactura(id){
+    await fb.deleteDoc(fb.doc(db,"facturas",id));
+    cargarFacturas();
+}
+
+// DESCARGAS
+function descargarHTML(contenido,nombre){
+
+    const blob=new Blob([contenido],{
+        type:"application/vnd.ms-excel"
+    });
+
+    const url=URL.createObjectURL(blob);
+
+    const a=document.createElement("a");
+
+    a.href=url;
+    a.download=nombre;
+    a.click();
+}
+
+async function descargarFacturas(){
+
+    const datos=await fb.getDocs(fb.collection(db,"facturas"));
+
+    let html="<table border='1'><tr><th>ID</th><th>Cliente</th><th>Producto</th><th>Total</th></tr>";
+
+    datos.forEach(d=>{
+
+        const f=d.data();
+
+        html+=`
+        <tr>
+        <td>${f.idFactura}</td>
+        <td>${f.cliente}</td>
+        <td>${f.descripcion}</td>
+        <td>${f.total}</td>
+        </tr>`;
+    });
+
+    html+="</table>";
+
+    descargarHTML(html,"facturas.xls");
+}
+
+async function descargarInventario(){
+
+    const datos=await fb.getDocs(fb.collection(db,"inventario"));
+
+    let html="<table border='1'><tr><th>Producto</th><th>Stock</th><th>Precio</th></tr>";
+
+    datos.forEach(d=>{
+
+        const data=d.data();
+
+        const stock=(data.lotes||[]).reduce((a,l)=>a+l.cantidad,0);
+
+        html+=`
+        <tr>
+        <td>${data.nombre}</td>
+        <td>${stock}</td>
+        <td>${data.precio}</td>
+        </tr>`;
+    });
+
+    html+="</table>";
+
+    descargarHTML(html,"inventario.xls");
+}
+
+</script>
+
+</body>
+</html>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
